@@ -9,7 +9,6 @@ import javax.swing.JTextField;
 
 public class Backend implements ActionListener{
 
-	//Here i create objects for the code.
 	JFrame frame;
 	JTextField textfield;
 	JButton[] numberButtons = new JButton[10];
@@ -27,7 +26,7 @@ public class Backend implements ActionListener{
 
 	Backend() {
 
-		// Defining JFrame.
+	
 		frame = new JFrame("Calculator");
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
@@ -40,14 +39,12 @@ public class Backend implements ActionListener{
 		frame.setLayout(null);
 		
 		
-		//Creating TextField Object.
 		textfield = new JTextField();
 		textfield.setBounds(50, 25, 300, 50);
 		textfield.setFont(myfont);
 		textfield.setEditable(false);
 		
 		
-		// Initialize Function Buttons.
 		addbutton = new JButton("+");
 		subbutton = new JButton("-");
 		mulbutton = new JButton("*");
@@ -57,7 +54,6 @@ public class Backend implements ActionListener{
 		delbutton = new JButton("Delete");
 		clrbutton = new JButton("Clear");
 		
-		//Added Too Array
 		functionButtons[0] = addbutton;
 		functionButtons[1] = subbutton;
 		functionButtons[2] = mulbutton;
@@ -69,7 +65,6 @@ public class Backend implements ActionListener{
 		
 		
 		
-		// Font and Action Listener For Both
 		for(int i = 0; i < 8; i++) {
 			functionButtons[i].addActionListener(this);
 			functionButtons[i].setFont(myfont);
@@ -85,12 +80,10 @@ public class Backend implements ActionListener{
 		
 		
 		
-		//Del and Clr Button.
 		delbutton.setBounds(50, 430, 145, 50);
 		clrbutton.setBounds(205, 430, 145, 50);
 		
 		
-		// Panel To Hold Buttons
 		panel = new JPanel();
 		panel.setBounds(50, 100, 300, 300);
 		panel.setLayout(new GridLayout(4,4,10,10));

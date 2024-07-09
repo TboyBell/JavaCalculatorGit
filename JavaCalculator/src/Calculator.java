@@ -7,7 +7,7 @@ public class Calculator {
 		
 			
 		//Runs Project From This Class,
-		// Makes COde Faster and Cleaner.
+		// Makes Code Faster and Cleaner.
 		Backend calc = new Backend();
 		
 		
