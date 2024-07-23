@@ -2,11 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 public class Backend implements ActionListener{
 
 	JFrame frame;
@@ -125,6 +120,7 @@ public class Backend implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		try {
 		for(int i=0;i<10;i++) {
 			if(e.getSource() == numberButtons[i]) {
 				textfield.setText(textfield.getText().concat(String.valueOf(i)));
@@ -192,7 +188,15 @@ public class Backend implements ActionListener{
 	    }
 	    
 	    
-	    
+		
+	} catch (ArithmeticException i) {
+	    JOptionPane.showMessageDialog(null, "Arithmetic error: " + i.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	} catch (NumberFormatException i) {
+	    JOptionPane.showMessageDialog(null, "Invalid number format: " + i.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		
+	} catch (Exception i) {
+	    JOptionPane.showMessageDialog(null, "An unexpected error has occured: " + i.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	}
 		
 	}
 	
