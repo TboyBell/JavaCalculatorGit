@@ -1,28 +1,67 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
+File "Calculator.Java":
+
+public class Calculator {
+
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+	
+		
+			
+		//Runs Project From This Class,
+		// Makes Code Faster and Cleaner.
+		Backend calc = new Backend();
+		
+		
+		
+	}
+	
+
+}
+
+
+I made the decision to create this file to run my code in the belief it would make my program faster.
+This was a decision made in the infancy of my knowledge.
+                                              Spoiler Alert: It Didn't Work.
+
+
+
+File "Backend.java":
+
+This file contains all the functionality of myy code.
+
+
 
 public class Backend implements ActionListener{
 
-	JFrame frame;
-	JPanel panel;
+
+    # Here, I declared and initialized the objects and functionalities I would need for the project.
+    
+    JFrame frame;
+    JPanel panel;
 	JTextField textfield;
-	JButton[] numberButtons = new JButton[10];
-	JButton[] functionButtons = new JButton[8];
-	JButton addbutton, subbutton, mulbutton, divbutton;
-	JButton decbutton, equbutton, delbutton, clrbutton;
+	JButton[] numberButtons = new JButton[10]; # I created my buttons within a array,
+                                               # as this help with assigning mass functionalities,
+                                               # keeping code clean and assigning values.
+
+	JButton[] functionButtons = new JButton[8]; 
+    JButton addbutton, subbutton, mulbutton, divbutton;
+	JButton decbutton, equbutton, delbutton, clrbutton; # Same principle here,
+                                                        # but rather I added the buttons to the array, to add functions seprately.
 	
 	
+	# Fonts and operators for project.
 	Font myfont = new Font("Arial Black", Font.ITALIC, 25);
-	
 	double num1 = 0, num2 =0, result=0;
 	char operator;
 	
-	
 
-	Backend() {
 
-	
+    Backend() {
+
+
+        # Here I initialize my frame and set it's behavioral properties.
 		frame = new JFrame("Calculator");
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
@@ -33,14 +72,20 @@ public class Backend implements ActionListener{
 		} );
 		frame.setSize(420,550);
 		frame.setLayout(null);
-		
-		
-		textfield = new JTextField();
+
+
+
+# Here I initialized my JTextField and added (size, font(Already created as 'myfont'), set the editable to false(prevent typing)).
+    textfield = new JTextField();
 		textfield.setBounds(50, 25, 300, 50);
 		textfield.setFont(myfont);
 		textfield.setEditable(false);
 		
 		
+        # Here I assign display values to the functional buttons,
+        # Then add them to the array 'functionButtons' created.
+        # This way using a for loop I can the nesscary mass functions needed,
+        # like (ActionListener, fonts(myfont), setFocusable).
 		addbutton = new JButton("+");
 		subbutton = new JButton("-");
 		mulbutton = new JButton("*");
@@ -59,28 +104,36 @@ public class Backend implements ActionListener{
 		functionButtons[6] = delbutton;
 		functionButtons[7] = clrbutton;
 		
-		
-		
 		for(int i = 0; i < 8; i++) {
 			functionButtons[i].addActionListener(this);
 			functionButtons[i].setFont(myfont);
 			functionButtons[i].setFocusable(false);
 		}
-		
+
+
+        
+        # Using a for loop once again we can do something special,
+        # I am able to add both display value and mass functionality.
 		for(int i = 0; i < 10; i++) {
 			numberButtons[i] = new JButton(String.valueOf(i));
 			numberButtons[i].addActionListener(this);
 			numberButtons[i].setFont(myfont);
 			numberButtons[i].setFocusable(false);
-		}
+		} 
 		
-		
-		
+
 		delbutton.setBounds(50, 430, 145, 50);
 		clrbutton.setBounds(205, 430, 145, 50);
-		
-		
-		panel = new JPanel();
+
+
+
+
+
+
+
+# Here I simply created my panel and added all my buttons to it.
+
+    panel = new JPanel();
 		panel.setBounds(50, 100, 300, 300);
 		panel.setLayout(new GridLayout(4,4,10,10));
 
@@ -103,6 +156,7 @@ public class Backend implements ActionListener{
 		panel.add(divbutton);
 		
 		
+        # And the pannels and buttons and textfield to the frame.
 		frame.add(panel);
 		frame.add(delbutton);
 		frame.add(clrbutton);
@@ -111,27 +165,53 @@ public class Backend implements ActionListener{
 		
 		
 	}
-	
+
+
+
+
+
+
+# Here is the contunation of the complicated closing function I wrote,
+# Starting at line 27 - 33.
+# Its to ensure the Application closes without any complication that can disrupt the system.
+
 	private void exitapplication() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.dispose();
 		
 	}
 
-	@Override
+
+
+
+# This block of code is the main functionalities behind,
+# the Buttons and Calculator.
+
+@Override
 	public void actionPerformed(ActionEvent e) {
 
-		try {
+		try { # Try-Catch Block for protection.
+
+        # Simple code that gets the valueof button within the array,
+        # And concats to the previous string.
 		for(int i=0;i<10;i++) {
 			if(e.getSource() == numberButtons[i]) {
 				textfield.setText(textfield.getText().concat(String.valueOf(i)));
 			}
 		}
 		
-		
+		# Function for decimal value.
 		if(e.getSource() == decbutton) {
 			textfield.setText(textfield.getText().concat("."));
 		}
+
+
+        # Within this block we definine the functions of the Arithmetic operators.
+        # When an Arithmetic operator is choosing,
+        # The number is stored as a double within our first value 'num1',
+        # The operator is saved to be used for the final calculations.
+        # The textfield is cleared for the next text.
+
 		if(e.getSource() == addbutton) {
 			num1 = Double.parseDouble(textfield.getText());
 			operator = '+';
@@ -154,6 +234,16 @@ public class Backend implements ActionListener{
 	        operator = '/';
 	        textfield.setText("");
 	    }
+
+
+
+        # Now when the equal button is pressed for the final result,
+        # Our second number is also stored within 'num2' as a double,
+        # Then using a switch case we can locate the operator immediately,
+        # Then run the block of code associated with that operation.
+
+        # The value 'num1' is then changed to result allowing the user to continue calculations with that value,
+        # Or Using the clear button restart the proccess.
 
 	    if(e.getSource() == equbutton) {
 	    	num2=Double.parseDouble(textfield.getText());
@@ -178,7 +268,9 @@ public class Backend implements ActionListener{
 	    	
 	    if (e.getSource() == clrbutton) {
 	    	textfield.setText("");
-	    }	
+	    }
+
+        # To delete characters.	
 	    if (e.getSource() == delbutton) {
 	        String string = textfield.getText();
 	        textfield.setText("");
@@ -189,7 +281,7 @@ public class Backend implements ActionListener{
 	    }
 	    
 	    
-		
+	# Catch block to manage Exceptions.
 	} catch (ArithmeticException i) {
 	    JOptionPane.showMessageDialog(null, "Arithmetic error: " + i.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	} catch (NumberFormatException i) {
@@ -200,6 +292,6 @@ public class Backend implements ActionListener{
 	}
 		
 	}
-	
-}
 
+Thank you for reading, I hope this properly demostrates what I was trying to achieve.
+Please feel free to critique and improve on.
