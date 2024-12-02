@@ -7,10 +7,11 @@ public class Backend implements ActionListener {
 	JPanel panel;
 	JTextField textfield;
 	JButton[] numberButtons = new JButton[10];
-	JButton[] functionButtons = new JButton[16];
+	JButton[] functionButtons = new JButton[17];
 	JButton addButton, subButton, mulButton, divButton;
 	JButton decButton, equButton, delButton, clrButton;
-	JButton perButton, sqrButton, negButton, powButton;
+	JButton perButton, sqrButton, negButton, powButton, hisButton;
+	boolean isRunning;
 
 	Font myFont = new Font("Arial Black", Font.PLAIN, 25);
 
@@ -20,9 +21,18 @@ public class Backend implements ActionListener {
 	Backend() {
 
 		frame = new JFrame("Calculator");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(400, 600); // Adjusted width and height to fit all buttons
 		frame.setLayout(null);
+		isRunning = true;
+
+		// Special Close function for history function.
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowFocusListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				isRunning = false;
+				closeApplication();
+			}
+		});
 
 		textfield = new JTextField();
 		textfield.setBounds(50, 25, 300, 50); // Adjusted width to match frame
@@ -39,8 +49,9 @@ public class Backend implements ActionListener {
 		sqrButton = new JButton("√");
 		negButton = new JButton("±");
 		powButton = new JButton("x^2");
-		delButton = new JButton("D");
+		delButton = new JButton("⌫");
 		clrButton = new JButton("C");
+		hisButton = new JButton("⏳");
 
 		functionButtons[0] = addButton;
 		functionButtons[1] = subButton;
@@ -54,6 +65,7 @@ public class Backend implements ActionListener {
 		functionButtons[9] = sqrButton;
 		functionButtons[10] = negButton;
 		functionButtons[11] = powButton;
+		functionButtons[12] = hisButton;
 
 		for (int i = 0; i < 11; i++) {
 			functionButtons[i].addActionListener(this);
@@ -73,12 +85,12 @@ public class Backend implements ActionListener {
 		panel.setLayout(new GridLayout(6, 4, 10, 10)); // 6 rows and 4 columns layout
 
 		// Adding buttons to panel in the order from the provided calculator image
-		panel.add(perButton);
-		panel.add(delButton);
 		panel.add(clrButton);
+		panel.add(delButton);
+		panel.add(perButton);
 		panel.add(divButton);
 
-		panel.add(new JButton("")); // Empty space placeholder
+		panel.add(hisButton); // Empty space placeholder
 		panel.add(powButton);
 		panel.add(sqrButton);
 		panel.add(mulButton);
@@ -108,6 +120,14 @@ public class Backend implements ActionListener {
 		frame.setVisible(true);
 	}
 
+	
+
+	public void closeApplication() {
+		// TODO Auto-generated method stub
+	
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.dispose();
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -216,5 +236,7 @@ public class Backend implements ActionListener {
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
+
+
 
 }
