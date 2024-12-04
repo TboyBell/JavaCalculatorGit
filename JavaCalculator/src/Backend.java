@@ -12,10 +12,11 @@ public class Backend implements ActionListener {
 	JButton decButton, equButton, delButton, clrButton;
 	JButton perButton, sqrButton, negButton, powButton, hisButton;
 	boolean isRunning;
+	DocumentLogger logfilHistory = new DocumentLogger();
 
 	Font myFont = new Font("Arial Black", Font.PLAIN, 25);
 
-	double num1 = 0, num2 = 0, result = 0;
+	double num1 = 0, num2 = 0, result = 0, powCount = 0;
 	char operator;
 
 	Backend() {
@@ -27,12 +28,18 @@ public class Backend implements ActionListener {
 
 		// Special Close function for history function.
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.addWindowFocusListener(new WindowAdapter() {
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
-				isRunning = false;
 				closeApplication();
 			}
 		});
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (!isRunning) {
+				logfilHistory.deleteTracebackFile();
+			}
+		}));
 
 		textfield = new JTextField();
 		textfield.setBounds(50, 25, 300, 50); // Adjusted width to match frame
@@ -48,10 +55,11 @@ public class Backend implements ActionListener {
 		perButton = new JButton("%");
 		sqrButton = new JButton("√");
 		negButton = new JButton("±");
-		powButton = new JButton("x^2");
-		delButton = new JButton("⌫");
+		powButton = new JButton("^2");
+		delButton = new JButton("D");
 		clrButton = new JButton("C");
-		hisButton = new JButton("⏳");
+		hisButton = new JButton("<#");
+		
 
 		functionButtons[0] = addButton;
 		functionButtons[1] = subButton;
@@ -67,7 +75,7 @@ public class Backend implements ActionListener {
 		functionButtons[11] = powButton;
 		functionButtons[12] = hisButton;
 
-		for (int i = 0; i < 11; i++) {
+		for (int i = 0; i < 13; i++) {
 			functionButtons[i].addActionListener(this);
 			functionButtons[i].setFont(myFont);
 			functionButtons[i].setFocusable(false);
@@ -123,9 +131,8 @@ public class Backend implements ActionListener {
 	
 
 	public void closeApplication() {
-		// TODO Auto-generated method stub
-	
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		System.out.println("Closing application. Cleaning up resources...");
+		isRunning = false; 
 		frame.dispose();
 	}
 
@@ -164,34 +171,21 @@ public class Backend implements ActionListener {
 				textfield.setText("");
 			}
 
+
+			// Special Characters Operators
+			
 			if (e.getSource() == powButton) {
-				num1 = Double.parseDouble(textfield.getText());
-				operator = '^';
-				textfield.setText("");
-			}
-
-			if (e.getSource() == equButton) {
-				num2 = Double.parseDouble(textfield.getText());
-
-				switch (operator) {
-					case '+':
-						result = num1 + num2;
-						break;
-					case '-':
-						result = num1 - num2;
-						break;
-					case '*':
-						result = num1 * num2;
-						break;
-					case '/':
-						result = num1 / num2;
-						break;
-					case '^':
-						result = Math.pow(num1, num2);
-						break;
+				if (powCount < 2) { 
+					num1 = Double.parseDouble(textfield.getText());
+					System.out.println(num1);
+					operator = '^'; 
+					num2 += 2; 
+					textfield.setText(textfield.getText().concat("^(2)"));
+				} else {
+					num2 += 2;
+					operator = '^';
+					textfield.setText(textfield.getText().concat("^(2)"));
 				}
-				textfield.setText(String.valueOf(result));
-				num1 = result;
 			}
 
 			if (e.getSource() == perButton) {
@@ -202,16 +196,53 @@ public class Backend implements ActionListener {
 
 			if (e.getSource() == sqrButton) {
 				double basevalue = Double.parseDouble(textfield.getText());
+				double sqrtValue = 0;
 				if (basevalue >= 0) {
-					double sqrtValue = Math.sqrt(basevalue);
+					sqrtValue = Math.sqrt(basevalue);
 					textfield.setText(String.valueOf(sqrtValue));
 				}
+
+				String temp = "√" + basevalue;
+				logfilHistory.logTraceback(temp, sqrtValue);
 			}
 
 			if (e.getSource() == negButton) {
 				double basevalue = Double.parseDouble(textfield.getText());
 				textfield.setText(String.valueOf(-basevalue));
 			}
+
+			if (e.getSource() == equButton) {
+				num2 = Double.parseDouble(textfield.getText());
+
+				switch (operator) {
+					case '+':
+						result = num1 + num2;
+						logfilHistory.logTraceback(num1, num2, operator, result);
+						break;
+					case '-':
+						result = num1 - num2;
+						logfilHistory.logTraceback(num1, num2, operator, result);
+						break;
+					case '*':
+						result = num1 * num2;
+						logfilHistory.logTraceback(num1, num2, operator, result);
+						break;
+					case '/':
+						result = num1 / num2;
+						logfilHistory.logTraceback(num1, num2, operator, result);
+						break;
+					case '^':
+						String operation = textfield.getText();
+						result = Math.pow(num1, num2);
+						System.out.println(result);
+						logfilHistory.logTraceback(operation, result);
+						break;
+				}
+					
+					textfield.setText(String.valueOf(result));
+					num1 = result;
+			}
+
 
 			if (e.getSource() == clrButton) {
 				textfield.setText("");
